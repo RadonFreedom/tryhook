@@ -1,10 +1,10 @@
-package fre.shown.tryhook;
+package fre.shown.tryhook.core;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class TryhookApplicationTests {
+class TryhookCoreApplicationTests {
 
     @Test
     void contextLoads() {
