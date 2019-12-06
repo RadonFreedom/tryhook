@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: tryhook
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/tryhook
+    username: radon
+    password: King@mysq1
+
+mybatis:
+  mapper-locations: classpath:mapper/*
+  configuration:
+    map-underscore-to-camel-case: true
+    use-generated-keys: true
+    jdbc-type-for-null: NULL
