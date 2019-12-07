@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: tryhook
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/hook
+    username: radon
+    password: King@mysq1
+  jpa:
+    hibernate:
+      use-new-id-generator-mappings: false
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+
+mybatis:
+  mapper-locations: classpath:mapper/*
+  configuration:
+    map-underscore-to-camel-case: true
+    use-generated-keys: true
+    jdbc-type-for-null: NULL
+
+#debug: true
