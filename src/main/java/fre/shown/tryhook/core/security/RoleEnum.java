@@ -1,4 +1,4 @@
-package fre.shown.tryhook.module.user.enums;
+package fre.shown.tryhook.core.security;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum UserRoleEnum {
+public enum RoleEnum {
 
     ADMIN(0, "管理员"),
     PARENT(1, "家长"),

@@ -22,10 +22,6 @@
 | core包   | 业务模块，包含 bo service 层      |
 | web包    | web模块，包含controller dto vo 层 |
 
-#### 持久层技术选型
-
-结合Spring Data JPA和MyBatis
-
 
 
 

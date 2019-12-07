@@ -13,5 +13,6 @@ spring:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
 
-
-#debug: true
+logging:
+  level:
+    org.springframework.security: DEBUG
