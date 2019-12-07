@@ -12,8 +12,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum BookStatusEnum {
 
-    AVAILABLE   (1, "上架"),
-    UNAVAILABLE (0, "下架"),
+    AVAILABLE(1, "上架"),
+    UNAVAILABLE(0, "下架"),
     ;
 
     private final int id;

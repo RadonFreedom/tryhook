@@ -1,7 +1,13 @@
 package fre.shown.tryhook.module.user.domain;
 
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.sql.Timestamp;
 
 /**
@@ -10,8 +16,12 @@ import java.sql.Timestamp;
  */
 
 @Data
+@Entity
+@Table(name = "user")
 public class UserDO {
 
+    @Id
+    @GeneratedValue
     private Long id;
     private String username;
     private String password;
@@ -19,6 +29,8 @@ public class UserDO {
     private Integer roleId;
     private String star;
 
+    @CreationTimestamp
     private Timestamp gmtCreate;
+    @UpdateTimestamp
     private Timestamp gmtModified;
 }

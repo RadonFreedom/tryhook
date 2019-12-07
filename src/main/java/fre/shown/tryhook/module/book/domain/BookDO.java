@@ -1,6 +1,8 @@
 package fre.shown.tryhook.module.book.domain;
 
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -27,7 +29,8 @@ public class BookDO {
     private String introduction;
     private Integer statusId;
 
-
+    @CreationTimestamp
     private Timestamp gmtCreate;
+    @UpdateTimestamp
     private Timestamp gmtModified;
 }

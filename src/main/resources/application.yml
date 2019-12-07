@@ -13,11 +13,5 @@ spring:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
 
-mybatis:
-  mapper-locations: classpath:mapper/*
-  configuration:
-    map-underscore-to-camel-case: true
-    use-generated-keys: true
-    jdbc-type-for-null: NULL
 
 #debug: true

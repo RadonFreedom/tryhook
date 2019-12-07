@@ -21,8 +21,8 @@ create table user
     avatarPath  varchar(50)      NOT NULL unique,
     roleId      integer unsigned not null,
     star        varchar(500) default null,
-    gmtCreate   datetime     default CURRENT_TIMESTAMP COMMENT '创建时间',
-    gmtModified datetime     default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    gmtCreate   datetime COMMENT '创建时间',
+    gmtModified datetime COMMENT '更新时间',
     PRIMARY KEY (id)
 ) ENGINE = InnoDB;
 
@@ -53,8 +53,8 @@ create table book
     coverPath    varchar(50)      NOT NULL unique,
     introduction varchar(200)     NOT NULL unique,
     statusId     integer unsigned not null,
-    gmtCreate    datetime default CURRENT_TIMESTAMP COMMENT '创建时间',
-    gmtModified  datetime default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    gmtCreate    datetime COMMENT '创建时间',
+    gmtModified  datetime COMMENT '更新时间',
     PRIMARY KEY (id),
     foreign key fk_book_categoryId (categoryId) references bookCategory (id)
 ) ENGINE = InnoDB;
@@ -73,7 +73,7 @@ create table carousel
 (
     id          bigint unsigned NOT NULL AUTO_INCREMENT,
     chartPath   varchar(50)     NOT NULL unique,
-    gmtCreate   datetime default CURRENT_TIMESTAMP COMMENT '创建时间',
-    gmtModified datetime default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    gmtCreate   datetime COMMENT '创建时间',
+    gmtModified datetime COMMENT '更新时间',
     PRIMARY KEY (id)
 ) ENGINE = InnoDB;

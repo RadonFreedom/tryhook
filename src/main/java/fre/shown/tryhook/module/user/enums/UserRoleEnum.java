@@ -12,9 +12,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum UserRoleEnum {
 
-    ADMIN       (0, "管理员"),
-    PARENT      (1, "家长"),
-    PRINCIPAL   (2, "园长"),
+    ADMIN(0, "管理员"),
+    PARENT(1, "家长"),
+    PRINCIPAL(2, "园长"),
     ;
 
     private final int id;

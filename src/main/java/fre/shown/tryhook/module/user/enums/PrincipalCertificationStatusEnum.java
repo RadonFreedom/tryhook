@@ -12,9 +12,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum PrincipalCertificationStatusEnum {
 
-    PENDING (0, "认证中"),
-    SUCCESS (1, "已认证"),
-    FAILED  (2, "认证失败"),
+    PENDING(0, "认证中"),
+    SUCCESS(1, "已认证"),
+    FAILED(2, "认证失败"),
     ;
 
     private final int id;
