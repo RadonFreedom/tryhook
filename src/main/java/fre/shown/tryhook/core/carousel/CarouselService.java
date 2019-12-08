@@ -26,7 +26,6 @@ public class CarouselService {
     public Result<String> getCarouselPathById(Long id) {
 
         if (id == null) {
-            logger.error(ErrorEnum.PARAM_ERROR.getMsg());
             return Result.error(ErrorEnum.PARAM_ERROR);
         }
 
