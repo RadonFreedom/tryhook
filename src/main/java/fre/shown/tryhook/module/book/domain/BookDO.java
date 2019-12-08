@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 /**
@@ -26,6 +27,11 @@ public class BookDO {
     private String name;
     private Long categoryId;
     private String coverPath;
+    private BigDecimal price;
+    private String author;
+    private String publisher;
+    private String publishTime;
+    private String isbn;
     private String introduction;
     private Integer statusId;
 

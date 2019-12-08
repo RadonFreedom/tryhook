@@ -21,6 +21,7 @@ public class BookVideoDO {
     @GeneratedValue
     private Long id;
     private Long bookId;
+    private Integer chapterNum;
     private String chapterTitle;
     private String videoPath;
 }

@@ -22,7 +22,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/admin/**", "/actuator/**").hasAuthority(String.valueOf(RoleEnum.ADMIN.getId()))
-                .anyRequest().authenticated()
+                .anyRequest().permitAll() //TODO debug
                 .and()
                 .formLogin()
                 .and()
@@ -31,7 +31,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        //TODO
+        //TODO debug
 //        return new BCryptPasswordEncoder();
         return new PasswordEncoder() {
             @Override

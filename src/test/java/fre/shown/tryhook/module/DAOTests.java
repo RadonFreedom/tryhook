@@ -6,7 +6,7 @@ import fre.shown.tryhook.module.book.dao.BookVideoDAO;
 import fre.shown.tryhook.module.book.domain.BookCategoryDO;
 import fre.shown.tryhook.module.book.domain.BookDO;
 import fre.shown.tryhook.module.book.domain.BookVideoDO;
-import fre.shown.tryhook.module.book.eums.BookStatusEnum;
+import fre.shown.tryhook.module.book.enums.BookStatusEnum;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

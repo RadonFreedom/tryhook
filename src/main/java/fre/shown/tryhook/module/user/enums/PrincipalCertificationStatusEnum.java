@@ -1,7 +1,7 @@
 package fre.shown.tryhook.module.user.enums;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 /**
  * @author Shaman
@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
  */
 
 @Getter
-@RequiredArgsConstructor
+@AllArgsConstructor
 public enum PrincipalCertificationStatusEnum {
 
     PENDING(0, "认证中"),
