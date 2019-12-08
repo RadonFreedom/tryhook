@@ -1,7 +1,7 @@
 package fre.shown.tryhook.core.security;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 /**
  * @author Shaman
@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
  */
 
 @Getter
-@RequiredArgsConstructor
+@AllArgsConstructor
 public enum RoleEnum {
 
     ADMIN(0, "管理员"),
@@ -17,6 +17,6 @@ public enum RoleEnum {
     PRINCIPAL(2, "园长"),
     ;
 
-    private final int id;
-    private final String roleName;
+    private int id;
+    private String roleName;
 }

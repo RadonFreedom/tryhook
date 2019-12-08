@@ -1,17 +1,19 @@
+
 spring:
   application:
     name: tryhook
+
+  jpa:
+    hibernate:
+      use-new-id-generator-mappings: false
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/hook
     username: radon
     password: King@mysq1
-  jpa:
-    hibernate:
-      use-new-id-generator-mappings: false
-      naming:
-        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
 
 logging:
   level:

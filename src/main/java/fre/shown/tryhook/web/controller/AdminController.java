@@ -1,6 +1,5 @@
-package fre.shown.tryhook.web;
+package fre.shown.tryhook.web.controller;
 
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -10,12 +9,11 @@ import org.springframework.web.bind.annotation.RestController;
  */
 
 @RestController
-@PreAuthorize("hasAuthority(1)")
+@RequestMapping("/admin")
 public class AdminController {
 
     @RequestMapping("/")
     public String test() {
         return "1";
     }
-
 }
