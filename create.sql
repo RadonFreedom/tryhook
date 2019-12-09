@@ -49,7 +49,7 @@ create table book
 (
     id           bigint unsigned  NOT NULL AUTO_INCREMENT,
     name         varchar(50)      NOT NULL unique,
-    categoryId   bigint unsigned  NOT NULL unique,
+    categoryId   bigint unsigned  NOT NULL,
     coverPath    varchar(50)      NOT NULL unique,
     price        DECIMAL(9, 2)    not null,
     author       varchar(50)      not null,
@@ -66,11 +66,11 @@ create table book
 
 create table bookVideo
 (
-    id           bigint unsigned NOT NULL AUTO_INCREMENT,
-    bookId       bigint unsigned NOT NULL,
+    id           bigint unsigned  NOT NULL AUTO_INCREMENT,
+    bookId       bigint unsigned  NOT NULL,
     chapterNum   integer unsigned not null,
-    chapterTitle varchar(50)     NOT NULL unique,
-    videoPath    varchar(50)     NOT NULL unique,
+    chapterTitle varchar(50)      NOT NULL unique,
+    videoPath    varchar(50)      NOT NULL unique,
     PRIMARY KEY (id),
     foreign key fk_bookVideo_bookId (bookId) references book (id)
 ) ENGINE = InnoDB;
@@ -83,3 +83,30 @@ create table carousel
     gmtModified datetime COMMENT '更新时间',
     PRIMARY KEY (id)
 ) ENGINE = InnoDB;
+
+
+# dev data
+insert into user (username, password, avatarPath, roleId)
+values ('admin', 'admin', '/111', 0);
+
+insert into bookCategory (`desc`)
+values ('1111')
+     , ('222');
+
+insert into book (name, categoryId, coverPath, price, author, publisher, publishTime, isbn, introduction, statusId)
+values (111, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+       (222, 1, 222, 1, 1, 1, 1, 1, 222, 1);
+
+insert into bookVideo (bookId, chapterNum, chapterTitle, videoPath)
+values (1, 1, 111, 1);
+
+insert into carousel (chartPath)
+values (1);
+
+
+
+
+
+
+
+

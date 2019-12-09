@@ -17,7 +17,7 @@ public class Result<R> {
     /**
      * 接口执行成功失败标识
      */
-    private Boolean success;
+    private boolean success;
 
     /**
      * 结果数据
@@ -29,26 +29,29 @@ public class Result<R> {
      */
     private String msg;
 
-    private Result(Boolean success, R value, String msg) {
+    private int code;
+
+    private Result(Boolean success, R value, String msg, int code) {
         this.success = success;
         this.value = value;
         this.msg = msg;
+        this.code = code;
     }
 
     public static <E> Result<E> success(E val) {
         return val == null ? error(ErrorEnum.RESULT_EMPTY)
-                : new Result<>(Boolean.TRUE, val, "");
+                : new Result<>(true, val, "", -1);
     }
 
-    public static <E> Result<E> error(String msg) {
-        return new Result<>(Boolean.FALSE, null, msg);
+    public static <E> Result<E> error(String msg, int code) {
+        return new Result<>(false, null, msg, code);
     }
 
     public static <E> Result<E> error(ErrorEnum errorEnum) {
-        return new Result<>(Boolean.FALSE, null, errorEnum.getMsg());
+        return new Result<>(false, null, errorEnum.getMsg(), errorEnum.getCode());
     }
 
     public static <E> boolean isSuccess(Result<E> result) {
-        return result != null && result.success != null && result.success.equals(true) && result.value != null;
+        return result != null && result.success && result.value != null;
     }
 }

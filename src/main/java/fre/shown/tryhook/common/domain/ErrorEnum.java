@@ -11,10 +11,10 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum ErrorEnum {
-
-    PARAM_ERROR("参数有误！"),
-    RESULT_EMPTY("请求结果为空！"),
+    RESULT_EMPTY(0, "请求结果为空！"),
+    PARAM_ERROR(1, "参数有误！"),
     ;
 
+    private int code;
     private String msg;
 }

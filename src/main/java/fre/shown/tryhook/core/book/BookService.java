@@ -5,8 +5,10 @@ import fre.shown.tryhook.common.domain.Result;
 import fre.shown.tryhook.core.book.domain.BookDetailVO;
 import fre.shown.tryhook.core.book.domain.BookRecommendationVO;
 import fre.shown.tryhook.core.book.domain.BookSearchVO;
+import fre.shown.tryhook.module.book.dao.BookCategoryDAO;
 import fre.shown.tryhook.module.book.dao.BookDAO;
 import fre.shown.tryhook.module.book.dao.BookVideoDAO;
+import fre.shown.tryhook.module.book.domain.BookCategoryDO;
 import fre.shown.tryhook.module.book.domain.BookDO;
 import fre.shown.tryhook.module.book.enums.BookStatusEnum;
 import fre.shown.tryhook.module.query.AvailableBookQueryManager;
@@ -28,6 +30,8 @@ import java.util.List;
 public class BookService {
 
     @Autowired
+    BookCategoryDAO bookCategoryDAO;
+    @Autowired
     BookDAO bookDAO;
     @Autowired
     BookVideoDAO bookVideoDAO;
@@ -40,7 +44,12 @@ public class BookService {
         if (page == null || size == null) {
             return Result.error(ErrorEnum.PARAM_ERROR);
         }
+
         List<BookDO> bookDOList = availableBookQueryManager.pageQuery(page, size, bookDAO);
+        if (bookDOList == null) {
+            return Result.error(ErrorEnum.RESULT_EMPTY);
+        }
+
         LinkedList<BookRecommendationVO> bookRecommendationVOList = new LinkedList<>();
         for (BookDO bookDO : bookDOList) {
             BookRecommendationVO curr = new BookRecommendationVO();
@@ -69,9 +78,44 @@ public class BookService {
         if (keyword == null) {
             return Result.error(ErrorEnum.PARAM_ERROR);
         }
-        //TODO
-        List<BookSearchVO> searchResult = new LinkedList<>();
 
+        List<BookDO> bookDOList = bookDAO.findAllByNameContains(keyword);
+        if (bookDOList == null) {
+            return Result.error(ErrorEnum.RESULT_EMPTY);
+        }
+
+        List<BookSearchVO> searchResult = new LinkedList<>();
+        for (BookDO bookDO : bookDOList) {
+            BookSearchVO curr = new BookSearchVO();
+            BeanUtils.copyProperties(bookDO, curr);
+            searchResult.add(curr);
+        }
         return Result.success(searchResult);
+    }
+
+    public Result<List<BookCategoryDO>> getBookCategories() {
+        List<BookCategoryDO> bookCategoryDOList = new LinkedList<>();
+        for (BookCategoryDO bookCategoryDO : bookCategoryDAO.findAll()) {
+            bookCategoryDOList.add(bookCategoryDO);
+        }
+
+        return Result.success(bookCategoryDOList);
+    }
+
+    public Result<List<BookRecommendationVO>> getBooksByCategoryId(Long categoryId) {
+        List<BookDO> bookList =
+                bookDAO.findAllByCategoryIdAndStatusId(categoryId, BookStatusEnum.AVAILABLE.getId());
+        if (bookList == null) {
+            return Result.error(ErrorEnum.RESULT_EMPTY);
+        }
+
+        List<BookRecommendationVO> result = new LinkedList<>();
+        for (BookDO bookDO : bookList) {
+            BookRecommendationVO bookRecommendationVO = new BookRecommendationVO();
+            BeanUtils.copyProperties(bookDO, bookRecommendationVO);
+            result.add(bookRecommendationVO);
+        }
+
+        return Result.success(result);
     }
 }
