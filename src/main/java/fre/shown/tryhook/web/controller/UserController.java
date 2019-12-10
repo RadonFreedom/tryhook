@@ -1,11 +1,10 @@
 package fre.shown.tryhook.web.controller;
 
 import fre.shown.tryhook.common.domain.Result;
-import fre.shown.tryhook.core.user.UserService;
 import fre.shown.tryhook.core.book.domain.BookStarVO;
+import fre.shown.tryhook.core.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
@@ -22,13 +21,13 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @PostMapping("/star")
-    public Result<Void> starBook(Principal principal, Long bookId) {
-        return userService.addStarByUsernameAndBookId(principal.getName(), bookId);
+    @RequestMapping("/star")
+    public Result<Boolean> starBook(Principal principal, Long bookId) {
+        return userService.starByUsernameAndBookId(principal.getName(), bookId);
     }
 
-    @GetMapping("/star")
+    @RequestMapping("/stars")
     public Result<List<BookStarVO>> getStarBooks(Principal principal) {
-        return userService.getStarBooksByUsername(principal.getName());
+        return userService.getStarsByUsername(principal.getName());
     }
 }

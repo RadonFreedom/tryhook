@@ -9,6 +9,7 @@ import fre.shown.tryhook.module.book.domain.BookDO;
 import fre.shown.tryhook.module.user.dao.UserDAO;
 import fre.shown.tryhook.module.user.domain.UserDO;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +29,7 @@ public class UserService {
     @Autowired
     BookDAO bookDAO;
 
-    public Result<Void> addStarByUsernameAndBookId(String username, Long bookId) {
+    public Result<Boolean> starByUsernameAndBookId(String username, Long bookId) {
 
         if (StringUtils.isBlank(username) || DataUtils.isIllegal(bookId)) {
             return Result.error(ErrorEnum.PARAM_ERROR);
@@ -39,13 +40,27 @@ public class UserService {
             return Result.error(ErrorEnum.RESULT_EMPTY);
         }
 
-        String star = userDO.getStar() + "," + bookId;
-        userDO.setStar(star);
+        String stars = userDO.getStar();
+        boolean result;
+        if (stars == null) {
+            stars = "";
+        }
+        if (stars.contains(bookId.toString())) {
+            //unstar the book
+            stars = stars.replace("," + bookId, "");
+            result = false;
+        } else {
+            //star the book
+            stars += "," + bookId;
+            result = true;
+        }
+
+        userDO.setStar(stars);
         userDAO.save(userDO);
-        return Result.success(null);
+        return Result.success(result);
     }
 
-    public Result<List<BookStarVO>> getStarBooksByUsername(String username) {
+    public Result<List<BookStarVO>> getStarsByUsername(String username) {
         if (StringUtils.isBlank(username)) {
             return Result.error(ErrorEnum.PARAM_ERROR);
         }
@@ -55,17 +70,37 @@ public class UserService {
             return Result.error(ErrorEnum.RESULT_EMPTY);
         }
 
-        List<Long> stars = new LinkedList<>();
-        for (String star : userDO.getStar().split(",")) {
-            stars.add(Long.valueOf(star));
+        List<Long> starIds = new LinkedList<>();
+        LinkedList<BookStarVO> result = new LinkedList<>();
+
+        if (StringUtils.isEmpty(userDO.getStar())) {
+            return Result.success(result);
         }
 
-        LinkedList<BookStarVO> result = new LinkedList<>();
-        for (BookDO bookDO : bookDAO.findAllById(stars)) {
+        for (String starId : userDO.getStar().split(",")) {
+            if (NumberUtils.isParsable(starId)) {
+                starIds.add(Long.valueOf(starId));
+            }
+        }
+
+        for (BookDO bookDO : bookDAO.findAllById(starIds)) {
             result.add(DataUtils.copyFields(bookDO, new BookStarVO()));
         }
-        //TODO
+
         return Result.success(result);
+    }
+
+    public Boolean isStar(Long bookId, String username) {
+        if (StringUtils.isBlank(username)) {
+            return false;
+        }
+
+        UserDO userDO = userDAO.findByUsername(username);
+        if (userDO == null || userDO.getStar() == null) {
+            return false;
+        }
+
+        return userDO.getStar().contains(bookId.toString());
     }
 }
 

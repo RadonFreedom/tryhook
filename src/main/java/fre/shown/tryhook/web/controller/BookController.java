@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
 import java.util.List;
 
 /**
@@ -40,7 +41,7 @@ public class BookController {
     }
 
     @RequestMapping("/book/{id}")
-    public Result<BookDetailVO> getBookDetail(@PathVariable Long id) {
-        return bookService.getBookDetailById(id);
+    public Result<BookDetailVO> getBookDetail(@PathVariable Long id, Principal principal) {
+        return bookService.getBookDetailById(id, principal.getName());
     }
 }

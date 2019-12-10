@@ -6,6 +6,7 @@ import fre.shown.tryhook.common.util.DataUtils;
 import fre.shown.tryhook.core.book.domain.BookDetailVO;
 import fre.shown.tryhook.core.book.domain.BookRecommendationVO;
 import fre.shown.tryhook.core.book.domain.BookSearchVO;
+import fre.shown.tryhook.core.user.UserService;
 import fre.shown.tryhook.module.book.dao.BookCategoryDAO;
 import fre.shown.tryhook.module.book.dao.BookDAO;
 import fre.shown.tryhook.module.book.dao.BookVideoDAO;
@@ -37,6 +38,8 @@ public class BookService {
     BookVideoDAO bookVideoDAO;
     @Autowired
     AvailableBookQueryManager availableBookQueryManager;
+    @Autowired
+    UserService userService;
     Logger logger = LoggerFactory.getLogger(BookService.class);
 
     public Result<List<BookRecommendationVO>> bookRecommendationPageQuery(Integer page, Integer size) {
@@ -57,8 +60,7 @@ public class BookService {
         return Result.success(bookRecommendationVOList);
     }
 
-    public Result<BookDetailVO> getBookDetailById(Long id) {
-        //TODO star
+    public Result<BookDetailVO> getBookDetailById(Long id, String username) {
         if (DataUtils.isIllegal(id)) {
             return Result.error(ErrorEnum.PARAM_ERROR);
         }
@@ -68,7 +70,10 @@ public class BookService {
         }
         BookDetailVO bookDetailVO = new BookDetailVO();
         DataUtils.copyFields(bookDO, bookDetailVO);
+
         bookDetailVO.setVideos(bookVideoDAO.findAllByBookId(id));
+
+        bookDetailVO.setStar(userService.isStar(id, username));
 
         return Result.success(bookDetailVO);
     }
