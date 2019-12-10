@@ -9,6 +9,6 @@ import org.springframework.data.repository.PagingAndSortingRepository;
  */
 
 public interface PrincipalCfgDAO extends PagingAndSortingRepository<PrincipalCfgDO, Long> {
-
+    PrincipalCfgDO findByUserId(Long userId);
 
 }

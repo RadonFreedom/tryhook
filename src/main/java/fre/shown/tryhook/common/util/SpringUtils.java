@@ -1,5 +1,7 @@
 package fre.shown.tryhook.common.util;
 
+import org.springframework.context.ConfigurableApplicationContext;
+
 import static fre.shown.tryhook.Application.AC;
 
 /**
@@ -18,5 +20,9 @@ public class SpringUtils {
 
     public static <T> T getBean(String name, Class<T> requiredType) {
         return AC.getBean(name, requiredType);
+    }
+
+    public static ConfigurableApplicationContext getApplicationContext() {
+        return AC;
     }
 }

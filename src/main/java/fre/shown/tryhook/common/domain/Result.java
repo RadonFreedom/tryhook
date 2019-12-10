@@ -40,7 +40,7 @@ public class Result<R> {
 
     public static <E> Result<E> success(E val) {
         return val == null ? error(ErrorEnum.RESULT_EMPTY)
-                : new Result<>(true, val, "", -1);
+                : new Result<>(true, val, "", ErrorEnum.SUCCESS.getCode());
     }
 
     public static <E> Result<E> error(String msg, int code) {
@@ -48,7 +48,11 @@ public class Result<R> {
     }
 
     public static <E> Result<E> error(ErrorEnum errorEnum) {
-        return new Result<>(false, null, errorEnum.getMsg(), errorEnum.getCode());
+        return error(errorEnum.getMsg(), errorEnum.getCode());
+    }
+
+    public static <E, T> Result<E> error(Result<T> result) {
+        return error(result.msg, result.code);
     }
 
     public static <E> boolean isSuccess(Result<E> result) {

@@ -3,18 +3,28 @@ package fre.shown.tryhook.core.user;
 import fre.shown.tryhook.common.domain.ErrorEnum;
 import fre.shown.tryhook.common.domain.Result;
 import fre.shown.tryhook.common.util.DataUtils;
+import fre.shown.tryhook.common.util.FileUtils;
 import fre.shown.tryhook.core.book.domain.BookStarVO;
 import fre.shown.tryhook.module.book.dao.BookDAO;
 import fre.shown.tryhook.module.book.domain.BookDO;
 import fre.shown.tryhook.module.user.dao.UserDAO;
+import fre.shown.tryhook.module.user.domain.PrincipalCfgDO;
 import fre.shown.tryhook.module.user.domain.UserDO;
+import fre.shown.tryhook.module.user.enums.PrincipalStatusEnum;
+import fre.shown.tryhook.module.user.manager.PrincipalCfgManager;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+
+import static fre.shown.tryhook.common.constant.PathConstant.PRINCIPAL_LICENSE_PATH_PREFIX;
 
 /**
  * @author Shaman
@@ -28,6 +38,62 @@ public class UserService {
     UserDAO userDAO;
     @Autowired
     BookDAO bookDAO;
+    @Autowired
+    PrincipalCfgManager principalCfgManager;
+
+    Logger logger = LoggerFactory.getLogger(UserService.class);
+
+    public Result<Boolean> registerPrincipal(MultipartFile license, String phoneNumber, String username) {
+        if (license == null || license.isEmpty()
+                || StringUtils.isEmpty(phoneNumber) || StringUtils.isEmpty(username)) {
+            return Result.error(ErrorEnum.PARAM_ERROR);
+        }
+
+        UserDO userDO = userDAO.findByUsername(username);
+        if (userDO == null) {
+            return Result.error(ErrorEnum.RESULT_EMPTY);
+        }
+
+        // 增加PrincipalCfgDO
+        PrincipalCfgDO principalCfgDO = new PrincipalCfgDO();
+        principalCfgDO.setUserId(userDO.getId());
+        principalCfgDO.setPhoneNumber(phoneNumber);
+        String path = PRINCIPAL_LICENSE_PATH_PREFIX + userDO.getId().toString()
+                + "/" + FileUtils.getRandomFileName(license.getOriginalFilename());
+        principalCfgDO.setLicensePath(path);
+        principalCfgDO.setCertificationStatusId(PrincipalStatusEnum.PENDING.getId());
+
+        try {
+            principalCfgManager.addPrincipal(principalCfgDO, license);
+        } catch (IOException e) {
+            logger.error(ErrorEnum.RUNTIME_ERROR.getMsg(), e);
+            return Result.error(ErrorEnum.RUNTIME_ERROR);
+        }
+        return Result.success(true);
+    }
+
+    public Result<Integer> getPrincipalStatus(String username) {
+
+        Result<PrincipalCfgDO> result = principalCfgManager.findByUsername(username);
+        if (!Result.isSuccess(result)) {
+            if (result.getCode() == ErrorEnum.RESULT_EMPTY.getCode()) {
+                return Result.success(PrincipalStatusEnum.NOT.getId());
+            } else {
+                return Result.error(result);
+            }
+        }
+
+        for (PrincipalStatusEnum status : PrincipalStatusEnum.values()) {
+            if (status.getId() == result.getValue().getCertificationStatusId()) {
+                return Result.success(status.getId());
+            }
+        }
+        return Result.success(PrincipalStatusEnum.NOT.getId());
+    }
+
+    public Result<PrincipalCfgDO> getPrincipal(String username) {
+        return principalCfgManager.findByUsername(username);
+    }
 
     public Result<Boolean> starByUsernameAndBookId(String username, Long bookId) {
 
