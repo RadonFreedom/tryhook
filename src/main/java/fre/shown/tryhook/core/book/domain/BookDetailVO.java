@@ -24,4 +24,6 @@ public class BookDetailVO {
     private String isbn;
     private String introduction;
     private List<BookVideoDO> videos;
+
+    private Boolean star;
 }

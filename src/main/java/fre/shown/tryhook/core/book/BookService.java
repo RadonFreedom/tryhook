@@ -2,6 +2,7 @@ package fre.shown.tryhook.core.book;
 
 import fre.shown.tryhook.common.domain.ErrorEnum;
 import fre.shown.tryhook.common.domain.Result;
+import fre.shown.tryhook.common.util.DataUtils;
 import fre.shown.tryhook.core.book.domain.BookDetailVO;
 import fre.shown.tryhook.core.book.domain.BookRecommendationVO;
 import fre.shown.tryhook.core.book.domain.BookSearchVO;
@@ -14,7 +15,6 @@ import fre.shown.tryhook.module.book.enums.BookStatusEnum;
 import fre.shown.tryhook.module.query.AvailableBookQueryManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,7 +41,7 @@ public class BookService {
 
     public Result<List<BookRecommendationVO>> bookRecommendationPageQuery(Integer page, Integer size) {
 
-        if (page == null || size == null) {
+        if (page == null || size == null || page < 0 || size <= 0) {
             return Result.error(ErrorEnum.PARAM_ERROR);
         }
 
@@ -52,15 +52,14 @@ public class BookService {
 
         LinkedList<BookRecommendationVO> bookRecommendationVOList = new LinkedList<>();
         for (BookDO bookDO : bookDOList) {
-            BookRecommendationVO curr = new BookRecommendationVO();
-            BeanUtils.copyProperties(bookDO, curr);
-            bookRecommendationVOList.addLast(curr);
+            bookRecommendationVOList.addLast(DataUtils.copyFields(bookDO, new BookRecommendationVO()));
         }
         return Result.success(bookRecommendationVOList);
     }
 
     public Result<BookDetailVO> getBookDetailById(Long id) {
-        if (id == null) {
+        //TODO star
+        if (DataUtils.isIllegal(id)) {
             return Result.error(ErrorEnum.PARAM_ERROR);
         }
         BookDO bookDO = bookDAO.findByIdAndStatusId(id, BookStatusEnum.AVAILABLE.getId());
@@ -68,7 +67,7 @@ public class BookService {
             return Result.error(ErrorEnum.RESULT_EMPTY);
         }
         BookDetailVO bookDetailVO = new BookDetailVO();
-        BeanUtils.copyProperties(bookDO, bookDetailVO);
+        DataUtils.copyFields(bookDO, bookDetailVO);
         bookDetailVO.setVideos(bookVideoDAO.findAllByBookId(id));
 
         return Result.success(bookDetailVO);
@@ -86,9 +85,7 @@ public class BookService {
 
         List<BookSearchVO> searchResult = new LinkedList<>();
         for (BookDO bookDO : bookDOList) {
-            BookSearchVO curr = new BookSearchVO();
-            BeanUtils.copyProperties(bookDO, curr);
-            searchResult.add(curr);
+            searchResult.add(DataUtils.copyFields(bookDO, new BookSearchVO()));
         }
         return Result.success(searchResult);
     }
@@ -103,6 +100,10 @@ public class BookService {
     }
 
     public Result<List<BookRecommendationVO>> getBooksByCategoryId(Long categoryId) {
+        if (DataUtils.isIllegal(categoryId)) {
+            return Result.error(ErrorEnum.PARAM_ERROR);
+        }
+
         List<BookDO> bookList =
                 bookDAO.findAllByCategoryIdAndStatusId(categoryId, BookStatusEnum.AVAILABLE.getId());
         if (bookList == null) {
@@ -111,9 +112,7 @@ public class BookService {
 
         List<BookRecommendationVO> result = new LinkedList<>();
         for (BookDO bookDO : bookList) {
-            BookRecommendationVO bookRecommendationVO = new BookRecommendationVO();
-            BeanUtils.copyProperties(bookDO, bookRecommendationVO);
-            result.add(bookRecommendationVO);
+            result.add(DataUtils.copyFields(bookDO, new BookRecommendationVO()));
         }
 
         return Result.success(result);

@@ -2,6 +2,7 @@ package fre.shown.tryhook.core.carousel;
 
 import fre.shown.tryhook.common.domain.ErrorEnum;
 import fre.shown.tryhook.common.domain.Result;
+import fre.shown.tryhook.common.util.DataUtils;
 import fre.shown.tryhook.module.carousel.dao.CarouselDAO;
 import fre.shown.tryhook.module.carousel.domain.CarouselDO;
 import org.slf4j.Logger;
@@ -25,7 +26,7 @@ public class CarouselService {
 
     public Result<String> getCarouselPathById(Long id) {
 
-        if (id == null) {
+        if (DataUtils.isIllegal(id)) {
             return Result.error(ErrorEnum.PARAM_ERROR);
         }
 

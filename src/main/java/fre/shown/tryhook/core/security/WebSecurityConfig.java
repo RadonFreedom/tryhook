@@ -22,11 +22,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/admin/**", "/actuator/**").hasAuthority(String.valueOf(RoleEnum.ADMIN.getId()))
-                .anyRequest().permitAll() //TODO debug
+                .anyRequest().authenticated()
                 .and()
                 .formLogin()
                 .and()
-                .httpBasic();
+                .csrf().disable();
     }
 
     @Bean

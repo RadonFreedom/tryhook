@@ -15,7 +15,7 @@ import java.util.List;
 @Component
 public class QueryManager<E, D extends PagingAndSortingRepository<E, Long>> {
 
-    public static final Sort SORT = Sort.by(Sort.Order.desc("id"));
+    protected static final Sort SORT = Sort.by(Sort.Order.desc("id"));
 
     public List<E> pageQuery(int page, int size, D dao) {
         return dao.findAll(PageRequest.of(page, size, SORT)).getContent();
