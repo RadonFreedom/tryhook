@@ -2,15 +2,13 @@ package fre.shown.tryhook.module.user.manager;
 
 import fre.shown.tryhook.common.domain.ErrorEnum;
 import fre.shown.tryhook.common.domain.Result;
-import fre.shown.tryhook.common.util.FileUtils;
 import fre.shown.tryhook.module.user.dao.PrincipalCfgDAO;
-import fre.shown.tryhook.module.user.dao.UserDAO;
 import fre.shown.tryhook.module.user.domain.PrincipalCfgDO;
 import fre.shown.tryhook.module.user.domain.UserDO;
-import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -22,29 +20,31 @@ import java.io.IOException;
 
 @Component
 public class PrincipalCfgManager {
+
     @Autowired
     PrincipalCfgDAO principalCfgDAO;
     @Autowired
-    UserDAO userDAO;
+    UserManager userManager;
+    @Autowired
+    UploadManagerHelper managerHelper;
 
-    @Transactional(rollbackFor = Throwable.class)
-    public void addPrincipal(PrincipalCfgDO principalCfgDO, MultipartFile license) throws IOException {
+    Logger logger = LoggerFactory.getLogger(PrincipalCfgManager.class);
 
-        // 增加PrincipalCfg
-        principalCfgDAO.save(principalCfgDO);
-        //传输照片
-        FileUtils.save(license, principalCfgDO.getLicensePath());
+    public Result<PrincipalCfgDO> addPrincipal(PrincipalCfgDO principalCfgDO, MultipartFile license) {
+        try {
+            return Result.success(
+                    managerHelper.save(license, principalCfgDO.getLicensePath(), principalCfgDO, principalCfgDAO));
+        } catch (IOException e) {
+            logger.error(ErrorEnum.RUNTIME_ERROR.getMsg(), e);
+            return Result.error(ErrorEnum.RUNTIME_ERROR);
+        }
     }
 
     public Result<PrincipalCfgDO> findByUsername(String username) {
-        if (StringUtils.isEmpty(username)) {
-            return Result.error(ErrorEnum.PARAM_ERROR);
+        Result<UserDO> userDOResult = userManager.findByUsername(username);
+        if (!Result.isSuccess(userDOResult)) {
+            return Result.error(userDOResult);
         }
-
-        UserDO userDO = userDAO.findByUsername(username);
-        if (userDO == null) {
-            return Result.error(ErrorEnum.RESULT_EMPTY);
-        }
-        return Result.success(principalCfgDAO.findByUserId(userDO.getId()));
+        return Result.success(principalCfgDAO.findByUserId(userDOResult.getValue().getId()));
     }
 }

@@ -11,4 +11,6 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 public interface UserDAO extends PagingAndSortingRepository<UserDO, Long> {
 
     UserDO findByUsername(String username);
+
+    boolean existsByUsername(String username);
 }

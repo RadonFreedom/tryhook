@@ -12,12 +12,11 @@ import java.util.List;
  * @date 2019/12/8 15:45
  */
 
-@Component
-public class QueryManager<E, D extends PagingAndSortingRepository<E, Long>> {
+public interface QueryManager<E, D extends PagingAndSortingRepository<E, Long>> {
 
-    protected static final Sort SORT = Sort.by(Sort.Order.desc("id"));
+    Sort SORT = Sort.by(Sort.Order.desc("id"));
 
-    public List<E> pageQuery(int page, int size, D dao) {
+    default List<E> pageQuery(int page, int size, D dao) {
         return dao.findAll(PageRequest.of(page, size, SORT)).getContent();
     }
 }

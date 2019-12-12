@@ -18,9 +18,9 @@ create table user
     id          bigint unsigned  NOT NULL AUTO_INCREMENT,
     username    varchar(200)     NOT NULL unique,
     password    varchar(200)     NOT NULL,
-    avatarPath  varchar(200)     NOT NULL unique,
+    avatarPath  varchar(200)     NOT NULL,
     roleId      integer unsigned not null,
-    star        varchar(500) default null,
+    star        varchar(500) default '',
     gmtCreate   datetime COMMENT '创建时间',
     gmtModified datetime COMMENT '更新时间',
     PRIMARY KEY (id)
@@ -29,7 +29,7 @@ create table user
 create table principalCfg
 (
     id                    bigint unsigned  NOT NULL AUTO_INCREMENT,
-    userId                bigint unsigned  NOT NULL,
+    userId                bigint unsigned  NOT NULL unique,
     phoneNumber           varchar(200)     NOT NULL unique,
     licensePath           varchar(200)     NOT NULL unique,
     kindergartenName      varchar(200) default NULL,

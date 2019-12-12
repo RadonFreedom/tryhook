@@ -40,7 +40,7 @@ public class FileUtils {
             f.getParentFile().mkdirs();
         }
         f.createNewFile();
-        file.transferTo(f.toPath());
+        file.transferTo(f);
     }
 
 

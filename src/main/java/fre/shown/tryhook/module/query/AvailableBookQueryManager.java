@@ -14,7 +14,7 @@ import java.util.List;
  */
 
 @Component
-public class AvailableBookQueryManager extends QueryManager<BookDO, BookDAO> {
+public class AvailableBookQueryManager implements QueryManager<BookDO, BookDAO> {
 
     @Override
     public List<BookDO> pageQuery(int page, int size, BookDAO dao) {
