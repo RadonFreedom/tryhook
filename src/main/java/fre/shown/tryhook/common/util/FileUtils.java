@@ -1,5 +1,6 @@
 package fre.shown.tryhook.common.util;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -23,18 +24,27 @@ public class FileUtils {
      * 获取文件后缀
      */
     public static String getSuffix(String fileName) {
+        if (fileName == null || !fileName.contains(".")) {
+            return "";
+        }
         return fileName.substring(fileName.lastIndexOf("."));
     }
 
     /**
      * 生成新的文件名
      */
-    public static String getRandomFileName(String fileOriginName) {
-        return getRandomUUID() + getSuffix(fileOriginName);
+    public static String getRandomFileName(MultipartFile multipartFile) {
+        if (multipartFile == null || multipartFile.getOriginalFilename() == null) {
+            return getRandomUUID();
+        }
+        return getRandomUUID() + getSuffix(multipartFile.getOriginalFilename());
     }
 
     public static void save(MultipartFile file, String dir) throws IOException {
 
+        if (file == null || file.isEmpty() || StringUtils.isBlank(dir)) {
+            return;
+        }
         File f = new File(UPLOAD_PREFIX + dir);
         if (f.getParentFile() != null) {
             f.getParentFile().mkdirs();

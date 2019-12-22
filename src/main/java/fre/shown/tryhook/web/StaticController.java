@@ -1,4 +1,4 @@
-package fre.shown.tryhook.web.controller;
+package fre.shown.tryhook.web;
 
 import fre.shown.tryhook.common.util.SpringUtils;
 import org.springframework.core.io.ResourceLoader;

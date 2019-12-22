@@ -1,23 +1,26 @@
 package fre.shown.tryhook.core.book;
 
+import fre.shown.tryhook.common.constant.PathConstant;
 import fre.shown.tryhook.common.domain.ErrorEnum;
 import fre.shown.tryhook.common.domain.Result;
 import fre.shown.tryhook.common.util.DataUtils;
+import fre.shown.tryhook.common.util.FileUtils;
 import fre.shown.tryhook.core.book.domain.BookDetailVO;
 import fre.shown.tryhook.core.book.domain.BookRecommendationVO;
 import fre.shown.tryhook.core.book.domain.BookSearchVO;
 import fre.shown.tryhook.core.user.UserService;
+import fre.shown.tryhook.module.base.BookQueryHelper;
+import fre.shown.tryhook.module.base.ManagerHelper;
 import fre.shown.tryhook.module.book.dao.BookCategoryDAO;
 import fre.shown.tryhook.module.book.dao.BookDAO;
 import fre.shown.tryhook.module.book.dao.BookVideoDAO;
 import fre.shown.tryhook.module.book.domain.BookCategoryDO;
 import fre.shown.tryhook.module.book.domain.BookDO;
+import fre.shown.tryhook.module.book.domain.BookVideoDO;
 import fre.shown.tryhook.module.book.enums.BookStatusEnum;
-import fre.shown.tryhook.module.query.AvailableBookQueryManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -37,24 +40,21 @@ public class BookService {
     @Autowired
     BookVideoDAO bookVideoDAO;
     @Autowired
-    AvailableBookQueryManager availableBookQueryManager;
+    BookQueryHelper bookQueryHelper;
+    @Autowired
+    ManagerHelper managerHelper;
     @Autowired
     UserService userService;
-    Logger logger = LoggerFactory.getLogger(BookService.class);
 
     public Result<List<BookRecommendationVO>> bookRecommendationPageQuery(Integer page, Integer size) {
 
-        if (page == null || size == null || page < 0 || size <= 0) {
-            return Result.error(ErrorEnum.PARAM_ERROR);
-        }
-
-        List<BookDO> bookDOList = availableBookQueryManager.pageQuery(page, size, bookDAO);
-        if (bookDOList == null) {
+        Result<List<BookDO>> bookDOList = bookQueryHelper.availableBookPageQuery(page, size, bookDAO);
+        if (bookDOList.getValue() == null) {
             return Result.error(ErrorEnum.RESULT_EMPTY);
         }
 
         LinkedList<BookRecommendationVO> bookRecommendationVOList = new LinkedList<>();
-        for (BookDO bookDO : bookDOList) {
+        for (BookDO bookDO : bookDOList.getValue()) {
             bookRecommendationVOList.addLast(DataUtils.copyFields(bookDO, new BookRecommendationVO()));
         }
         return Result.success(bookRecommendationVOList);
@@ -121,5 +121,55 @@ public class BookService {
         }
 
         return Result.success(result);
+    }
+
+    public Result<List<BookDO>> getBook(Integer page, Integer size) {
+        return managerHelper.pageQuery(page, size, bookDAO);
+    }
+
+    public Result<Boolean> saveBook(MultipartFile cover, BookDO bookDO) {
+        String dir = PathConstant.BOOK_COVER_PATH_PREFIX + FileUtils.getRandomFileName(cover);
+        Result<BookDO> result =  managerHelper.saveWithFile(cover, dir, bookDO, bookDAO);
+        return Result.isSuccess(result) ? Result.success(true) : Result.error(result);
+    }
+
+    public Result<Boolean> deleteBookByIds(List<Long> ids) {
+        bookVideoDAO.deleteAllByBookIdIn(ids);
+        return managerHelper.deleteAllById(ids, bookDAO);
+    }
+
+    public Result<List<BookCategoryDO>> getBookCategory(Integer page, Integer size) {
+        return managerHelper.pageQuery(page, size, bookCategoryDAO);
+    }
+
+    public Result<Boolean> saveBookCategory(BookCategoryDO bookCategoryDO) {
+        Result<BookCategoryDO> result =  managerHelper.save(bookCategoryDO, bookCategoryDAO);
+        return Result.isSuccess(result) ? Result.success(true) : Result.error(result);
+    }
+
+    public Result<Boolean> deleteBookCategoryByIds(List<Long> ids) {
+        if (ids == null) {
+            return Result.success(true);
+        }
+        for (Long id : ids) {
+            if (bookDAO.existsByCategoryId(id)) {
+                return Result.error(ErrorEnum.DATA_CONFLICT);
+            }
+        }
+        return managerHelper.deleteAllById(ids, bookCategoryDAO);
+    }
+
+    public Result<List<BookVideoDO>> getBookVideo(Integer page, Integer size, Long bookId) {
+        return bookQueryHelper.bookVideoPageQueryByBookId(page, size, bookVideoDAO, bookId);
+    }
+
+    public Result<Boolean> saveBookVideo(MultipartFile video, BookVideoDO bookVideoDO) {
+        String dir = PathConstant.BOOK_VIDEO_PATH_PREFIX + FileUtils.getRandomFileName(video);
+        Result<BookVideoDO> result =  managerHelper.saveWithFile(video, dir, bookVideoDO, bookVideoDAO);
+        return Result.isSuccess(result) ? Result.success(true) : Result.error(result);
+    }
+
+    public Result<Boolean> deleteBookVideoByIds(List<Long> ids) {
+        return managerHelper.deleteAllById(ids, bookVideoDAO);
     }
 }

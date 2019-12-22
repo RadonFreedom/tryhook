@@ -60,7 +60,7 @@ public class UserService {
         principalCfgDO.setUserId(userDO.getId());
         principalCfgDO.setPhoneNumber(phoneNumber);
         String path = PRINCIPAL_LICENSE_PATH_PREFIX + userDO.getId().toString()
-                + "/" + FileUtils.getRandomFileName(license.getOriginalFilename());
+                + "/" + FileUtils.getRandomFileName(license);
         principalCfgDO.setLicensePath(path);
         principalCfgDO.setCertificationStatusId(PrincipalStatusEnum.PENDING.getId());
 
@@ -186,7 +186,7 @@ public class UserService {
         UserDO userDO = userDOResult.getValue();
 
         userDO.setAvatarPath(USER_AVATAR_PATH_PREFIX + userDO.getId() + "/"
-                + FileUtils.getRandomFileName(avatar.getOriginalFilename()));
+                + FileUtils.getRandomFileName(avatar));
 
 
         Result<UserDO> saveResult = userManager.saveAvatar(userDO, avatar);
@@ -200,6 +200,15 @@ public class UserService {
         }
         UserDO userDO = userDOResult.getValue();
         return Result.success(DataUtils.copyFields(userDO, new UserVO()));
+    }
+
+
+    public Result<List<UserVO>> getUser(Integer page, Integer size) {
+        return userManager.pageQuery(page, size);
+    }
+
+    public Result<Boolean> deleteUserByIds(List<Long> ids) {
+        return userManager.deleteUserByIds(ids);
     }
 }
 

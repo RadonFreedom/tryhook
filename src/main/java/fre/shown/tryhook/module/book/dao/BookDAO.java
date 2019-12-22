@@ -1,9 +1,9 @@
 package fre.shown.tryhook.module.book.dao;
 
+import fre.shown.tryhook.module.base.BaseDAO;
 import fre.shown.tryhook.module.book.domain.BookDO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import java.util.List;
  * @date 2019/12/6 14:49
  */
 
-public interface BookDAO extends PagingAndSortingRepository<BookDO, Long> {
+public interface BookDAO extends BaseDAO<BookDO> {
 
     Page<BookDO> findAllByStatusId(Integer statusId, Pageable pageable);
 
@@ -21,4 +21,6 @@ public interface BookDAO extends PagingAndSortingRepository<BookDO, Long> {
     List<BookDO> findAllByNameContains(String keyword);
 
     List<BookDO> findAllByCategoryIdAndStatusId(Long id, Integer statusId);
+
+    Boolean existsByCategoryId(Long id);
 }

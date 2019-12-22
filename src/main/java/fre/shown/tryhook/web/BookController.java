@@ -1,4 +1,4 @@
-package fre.shown.tryhook.web.controller;
+package fre.shown.tryhook.web;
 
 import fre.shown.tryhook.common.domain.Result;
 import fre.shown.tryhook.core.book.BookService;

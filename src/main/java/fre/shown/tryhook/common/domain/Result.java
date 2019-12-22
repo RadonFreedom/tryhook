@@ -29,6 +29,9 @@ public class Result<R> {
      */
     private String msg;
 
+    /**
+     * 响应代码
+     */
     private int code;
 
     private Result(Boolean success, R value, String msg, int code) {
