@@ -1,13 +1,12 @@
 package fre.shown.tryhook.common.util;
 
+import fre.shown.tryhook.common.constant.PathConstant;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
-
-import static fre.shown.tryhook.common.constant.PathConstant.UPLOAD_PREFIX;
 
 /**
  * @author Shaman
@@ -45,7 +44,7 @@ public class FileUtils {
         if (file == null || file.isEmpty() || StringUtils.isBlank(dir)) {
             return;
         }
-        File f = new File(UPLOAD_PREFIX + dir);
+        File f = new File(PathConstant.UPLOAD_PATH() + dir);
         if (f.getParentFile() != null) {
             f.getParentFile().mkdirs();
         }

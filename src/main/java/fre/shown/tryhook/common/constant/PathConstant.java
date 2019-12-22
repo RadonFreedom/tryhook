@@ -1,19 +1,22 @@
 package fre.shown.tryhook.common.constant;
 
+import fre.shown.tryhook.common.util.SpringUtils;
 import fre.shown.tryhook.module.book.domain.BookDO;
 import fre.shown.tryhook.module.book.domain.BookVideoDO;
 import fre.shown.tryhook.module.carousel.domain.CarouselDO;
 import fre.shown.tryhook.module.user.domain.PrincipalCfgDO;
 import fre.shown.tryhook.module.user.domain.UserDO;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 /**
  * @author Shaman
  * @date 2019/12/10 14:32
  */
 
+@Component
 public class PathConstant {
 
-    public static final String UPLOAD_PREFIX = "/root/";
     /**
      * @see PrincipalCfgDO#licensePath
      */
@@ -35,4 +38,12 @@ public class PathConstant {
      * @see CarouselDO#chartPath
      */
     public static final String CAROUSEL_PATH_PREFIX = "carousel/";
+
+
+    @Value("${UPLOAD_PATH}")
+    private String uploadPath;
+
+    public static String UPLOAD_PATH() {
+        return SpringUtils.getBean(PathConstant.class).uploadPath;
+    }
 }
