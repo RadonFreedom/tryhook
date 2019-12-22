@@ -8,6 +8,7 @@ import fre.shown.tryhook.core.book.domain.BookStarVO;
 import fre.shown.tryhook.core.security.RoleEnum;
 import fre.shown.tryhook.module.book.dao.BookDAO;
 import fre.shown.tryhook.module.book.domain.BookDO;
+import fre.shown.tryhook.module.user.dao.PrincipalCfgDAO;
 import fre.shown.tryhook.module.user.domain.PrincipalCfgDO;
 import fre.shown.tryhook.module.user.domain.UserDO;
 import fre.shown.tryhook.module.user.enums.PrincipalStatusEnum;
@@ -40,6 +41,8 @@ public class UserService {
     BookDAO bookDAO;
     @Autowired
     PrincipalCfgManager principalCfgManager;
+    @Autowired
+    PrincipalCfgDAO principalCfgDAO;
 
     Logger logger = LoggerFactory.getLogger(UserService.class);
 
@@ -208,7 +211,23 @@ public class UserService {
     }
 
     public Result<Boolean> deleteUserByIds(List<Long> ids) {
+        principalCfgDAO.deleteAllByUserIdIn(ids);
         return userManager.deleteUserByIds(ids);
+    }
+
+
+    public Result<List<PrincipalVO>> getPrincipal(Integer page, Integer size) {
+
+        return principalCfgManager.pageQuery(page, size);
+    }
+
+    public Result<Boolean> savePrincipal(PrincipalCfgDO principalCfgDO) {
+        Result<PrincipalCfgDO> saveResult = principalCfgManager.save(principalCfgDO);
+        return Result.isSuccess(saveResult) ? Result.success(true) : Result.error(saveResult);
+    }
+
+    public Result<Boolean> deletePrincipalByIds(List<Long> ids) {
+        return principalCfgManager.deletePrincipal(ids);
     }
 }
 

@@ -3,12 +3,14 @@ package fre.shown.tryhook.web;
 import fre.shown.tryhook.common.domain.Result;
 import fre.shown.tryhook.core.book.BookService;
 import fre.shown.tryhook.core.carousel.CarouselService;
+import fre.shown.tryhook.core.user.PrincipalVO;
 import fre.shown.tryhook.core.user.UserService;
 import fre.shown.tryhook.core.user.UserVO;
 import fre.shown.tryhook.module.book.domain.BookCategoryDO;
 import fre.shown.tryhook.module.book.domain.BookDO;
 import fre.shown.tryhook.module.book.domain.BookVideoDO;
 import fre.shown.tryhook.module.carousel.domain.CarouselDO;
+import fre.shown.tryhook.module.user.domain.PrincipalCfgDO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -102,5 +104,19 @@ public class AdminController {
         return userService.deleteUserByIds(ids);
     }
 
+    @GetMapping("/principal")
+    public Result<List<PrincipalVO>> getPrincipal(Integer page, Integer size) {
+        return userService.getPrincipal(page, size);
+    }
+
+    @PostMapping(value = "/principal")
+    public Result<Boolean> savePrincipal(PrincipalCfgDO principalCfgDO) {
+        return userService.savePrincipal(principalCfgDO);
+    }
+
+    @DeleteMapping("/principal")
+    public Result<Boolean> deletePrincipal(List<Long> ids) {
+        return userService.deletePrincipalByIds(ids);
+    }
 
 }
