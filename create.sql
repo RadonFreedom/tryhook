@@ -1,7 +1,7 @@
-# show variables like 'character%';
-# set character_set_database = utf8mb4;
-# set character_set_server = utf8mb4;
-# show variables like '%time_zone%';
+show variables like 'character%';
+set character_set_database = utf8mb4;
+set character_set_server = utf8mb4;
+show variables like '%time_zone%';
 
 create database if not exists hook;
 use hook;

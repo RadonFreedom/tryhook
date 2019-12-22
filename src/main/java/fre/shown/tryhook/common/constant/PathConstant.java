@@ -13,7 +13,7 @@ import fre.shown.tryhook.module.user.domain.UserDO;
 
 public class PathConstant {
 
-    public static final String UPLOAD_PREFIX = "/Users/radon/Desktop/hook/";
+    public static final String UPLOAD_PREFIX = "/root/";
     /**
      * @see PrincipalCfgDO#licensePath
      */
