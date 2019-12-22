@@ -124,19 +124,18 @@
    | ---------------------------- | -------------------------------------------------- | ------------------------------------------------------------ |
    | 表单登录                     | POST /login username=&password=                    | 重定向                                                       |
    | 用户登出                     | /logout                                            | 重定向到GET /login?logout                                    |
+   | 注册用户(头像默认)           | POST /register username=demoData&password=demoData | true                                                         |
+   | 上传用户头像                 | POST /avatar avatar=avatar                         | true                                                         |
+   | 获取用户信息                 | GET /user                                          | {<br/>  "id": 1,<br/>  "username": "demoData",<br/>  "avatarPath": "demoData"<br/>} |
    | 收藏/取消收藏                | /star?bookId=1                                     | true表示状态变更为收藏，false为未收藏                        |
    | 获取所有收藏图书             | /stars                                             | [{<br/>  "id": 1,<br/>  "name": "demoData",<br/>  "coverPath": "demoData",<br/>  "introduction": "demoData"<br/>}, ...] |
    | 获取某个图书分类下的所有图书 | POST /principal phoneNumber=123&license=file       | true                                                         |
    | 状态查看                     | GET /principal/status                              | 返回integer：NOT(-1, "未认证"), PENDING(0, "认证中"), SUCCESS(1, "已认证"), FAILED(2, "认证失败"); |
    | 获取已经上传的认证信息       | GET /principal                                     | {<br/>  "id": 1,<br/>  "userId": 1,<br/>  "phoneNumber": "demoData",<br/>  "licensePath": "demoData",<br/>  "kindergartenName": "demoData",<br/>  "certificationStatusId": 1<br/>} |
-   | 注册用户(头像默认)           | POST /register username=demoData&password=demoData | true                                                         |
-   | 上传用户头像                 | POST /avatar avatar=avatar                         | true                                                         |
-   | 获取用户信息                 | GET /user                                          | {<br/>  "id": 1,<br/>  "username": "demoData",<br/>  "avatarPath": "demoData"<br/>} |
 
 4. 获取静态资源
 
-URL：/static?dir=demoData
+   URL：/static?dir=demoData
 
 
 
-### 园长认证逻辑梳理
