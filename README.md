@@ -122,8 +122,8 @@
 
    | 解释                         | URL                                                | 返回值（value值）                                            |
    | ---------------------------- | -------------------------------------------------- | ------------------------------------------------------------ |
-   | 表单登录                     | POST /login username=&password=                    | 重定向                                                       |
-   | 用户登出                     | /logout                                            | 重定向到GET /login?logout                                    |
+   | 表单登录                     | POST /login username=&password=                    | 登录成功：200 OK，响应实体为空<br/>登陆失败：重定向/login?error |
+   | 用户登出                     | /logout                                            | 重定向/login?logout                                          |
    | 注册用户(头像默认)           | POST /register username=demoData&password=demoData | true                                                         |
    | 上传用户头像                 | POST /avatar avatar=avatar                         | true                                                         |
    | 获取用户信息                 | GET /user                                          | {<br/>  "id": 1,<br/>  "username": "demoData",<br/>  "avatarPath": "demoData"<br/>} |
