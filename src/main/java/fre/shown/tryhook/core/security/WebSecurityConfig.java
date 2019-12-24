@@ -13,6 +13,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Collections;
+import java.util.List;
 
 /**
  * @author Shaman
@@ -22,9 +23,8 @@ import java.util.Collections;
 @Configuration
 @EnableWebSecurity(debug = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-
-    @Value("${security.allowedOrigin}")
-    private String allowedOrigin;
+    @Value("#{'${security.allowedOrigin}'.split(',')}")
+    private List<String> allowedOrigins;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -44,7 +44,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOrigin(allowedOrigin);
+        configuration.setAllowedOrigins(allowedOrigins);
         configuration.setAllowedMethods(Collections.singletonList(CorsConfiguration.ALL));
         configuration.setAllowedHeaders(Collections.singletonList(CorsConfiguration.ALL));
         configuration.setAllowCredentials(true);
