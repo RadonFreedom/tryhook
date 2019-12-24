@@ -1,6 +1,7 @@
 package fre.shown.tryhook.core.security;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -22,6 +23,9 @@ import java.util.Collections;
 @EnableWebSecurity(debug = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    @Value("${security.allowedOrigin}")
+    private String allowedOrigin;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -40,7 +44,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Collections.singletonList(CorsConfiguration.ALL));
+        configuration.addAllowedOrigin(allowedOrigin);
         configuration.setAllowedMethods(Collections.singletonList(CorsConfiguration.ALL));
         configuration.setAllowedHeaders(Collections.singletonList(CorsConfiguration.ALL));
         configuration.setAllowCredentials(true);

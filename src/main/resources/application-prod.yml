@@ -1,3 +1,5 @@
 UPLOAD_PATH: /root/
 server:
   port: 80
+security:
+  allowedOrigin: "*"
