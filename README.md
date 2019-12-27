@@ -116,7 +116,7 @@
    | 按关键字keyword搜索图书      | /search?keyword=demoData | [{<br/>  "id": 1,<br/>  "name": "demoData",<br/>  "coverPath": "demoData",<br/>  "price": 1,<br/>  "author": "demoData",<br/>  "publisher": "demoData",<br/>  "publishTime": "demoData",<br/>  "isbn": "demoData"<br/>}, ...] |
    | 获取所有图书分类             | /category                | [{<br/>  "id": 1,<br/>  "desc": "demoData"<br/>}, ...]       |
    | 获取某个图书分类下的所有图书 | /books?categoryId=1      | [{<br/>  "id": 1,<br/>  "name": "demoData",<br/>  "coverPath": "demoData"<br/>}, ...] |
-   | 按照图书id获取详情           | /book/{id}               | {<br/>  "id": 1,<br/>  "name": "demoData",<br/>  "coverPath": "demoData",<br/>  "price": 1,<br/>  "author": "demoData",<br/>  "publisher": "demoData",<br/>  "publishTime": "demoData",<br/>  "isbn": "demoData",<br/>  "introduction": "demoData",<br/>  "videos": {<br/>    "id": 1,<br/>    "bookId": 1,<br/>    "chapterNum": 1,<br/>    "chapterTitle": "demoData",<br/>    "videoPath": "demoData"<br/>  },<br/>  "star": true<br/>} |
+   | 按照图书id获取详情           | /book/{id}               | {<br/>    "id": 1,<br/>    "name": "111",<br/>    "coverPath": "1",<br/>    "price": 1,<br/>    "author": "1",<br/>    "publisher": "1",<br/>    "publishTime": "1",<br/>    "isbn": "1",<br/>    "introduction": "1",<br/>    "videos": [<br/>      {<br/>        "id": 1,<br/>        "bookId": 1,<br/>        "chapterNum": 1,<br/>        "chapterTitle": "111",<br/>        "videoPath": "1"<br/>      }, ...<br/>    ],<br/>    "star": false<br/>} |
 
 3. 我的
 
