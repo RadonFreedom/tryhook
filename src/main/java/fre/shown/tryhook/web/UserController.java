@@ -2,15 +2,13 @@ package fre.shown.tryhook.web;
 
 import fre.shown.tryhook.common.domain.Result;
 import fre.shown.tryhook.core.book.domain.BookStarVO;
+import fre.shown.tryhook.core.security.UserDetailsImpl;
 import fre.shown.tryhook.core.user.UserService;
 import fre.shown.tryhook.core.user.UserVO;
 import fre.shown.tryhook.module.user.domain.PrincipalCfgDO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
@@ -28,8 +26,8 @@ public class UserController {
     UserService userService;
 
     @RequestMapping("/star")
-    public Result<Boolean> starBook(Principal principal, Long bookId) {
-        return userService.starByUsernameAndBookId(principal.getName(), bookId);
+    public Result<Boolean> starBook(@RequestAttribute UserDetailsImpl userDetails, Long bookId) {
+        return userService.starByUsernameAndBookId(userDetails.getUsername(), bookId);
     }
 
     @RequestMapping("/stars")

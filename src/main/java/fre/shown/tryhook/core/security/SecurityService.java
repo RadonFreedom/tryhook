@@ -28,8 +28,6 @@ public class SecurityService implements UserDetailsService {
             throw new UsernameNotFoundException(result.getMsg());
         }
 
-        UserDetailsImpl userDetails = new UserDetailsImpl();
-        DataUtils.copyFields(result.getValue(), userDetails);
-        return userDetails;
+        return DataUtils.copyFields(result.getValue(), new UserDetailsImpl());
     }
 }

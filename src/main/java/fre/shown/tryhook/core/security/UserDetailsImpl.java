@@ -14,6 +14,7 @@ import java.util.Collections;
 @Data
 public class UserDetailsImpl implements UserDetails {
 
+    private Long id;
     private String username;
     private String password;
     private Integer roleId;
