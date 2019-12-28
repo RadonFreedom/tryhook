@@ -12,6 +12,7 @@ public class BookStarVO {
 
     private Long id;
     private String name;
+    private String author;
     private String coverPath;
     private String introduction;
 }

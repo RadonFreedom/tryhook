@@ -24,11 +24,10 @@
 
 
 
-TODOLIST:
+TODO:
 
-1. 接口可否直接取出用户id
+1. 接口可直接取userDetails
 2. 多文件上传
-3. star单独建表，避免user表重复访问
 
 
 
