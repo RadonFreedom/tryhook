@@ -26,13 +26,13 @@ public class UserController {
     UserService userService;
 
     @RequestMapping("/star")
-    public Result<Boolean> starBook(@RequestAttribute UserDetailsImpl userDetails, Long bookId) {
-        return userService.starByUsernameAndBookId(userDetails.getUsername(), bookId);
+    public Result<Boolean> starBook(@RequestParam Long bookId, @RequestAttribute UserDetailsImpl userDetails) {
+        return userService.starByBookIdAndUserId(bookId, userDetails.getId());
     }
 
     @RequestMapping("/stars")
-    public Result<List<BookStarVO>> getStarBooks(Principal principal) {
-        return userService.getStarsByUsername(principal.getName());
+    public Result<List<BookStarVO>> getStarBooks(@RequestAttribute UserDetailsImpl userDetails) {
+        return userService.getStarsByUserId(userDetails.getId());
     }
 
     @PostMapping(value = "/principal", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

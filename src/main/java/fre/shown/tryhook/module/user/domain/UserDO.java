@@ -27,7 +27,6 @@ public class UserDO {
     private String password;
     private String avatarPath;
     private Integer roleId;
-    private String star;
 
     @CreationTimestamp
     private Timestamp gmtCreate;

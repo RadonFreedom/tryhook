@@ -13,8 +13,10 @@ import java.io.IOException;
 public class UserDetailsFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-
-        request.setAttribute("userDetails", UserUtils.getUserDetails());
+        UserDetailsImpl userDetails = UserUtils.getUserDetails();
+        if (userDetails != null) {
+            request.setAttribute("userDetails", UserUtils.getUserDetails());
+        }
         chain.doFilter(request, response);
     }
 }

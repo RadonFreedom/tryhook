@@ -13,6 +13,10 @@ public class DataUtils {
         return id == null || id <= 0;
     }
 
+    public static boolean isLegal(Long id) {
+        return id != null && id > 0;
+    }
+
     public static <T> T copyFields(Object source, T target) {
         BeanUtils.copyProperties(source, target);
         return target;

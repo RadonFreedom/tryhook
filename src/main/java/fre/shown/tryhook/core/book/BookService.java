@@ -60,7 +60,7 @@ public class BookService {
         return Result.success(bookRecommendationVOList);
     }
 
-    public Result<BookDetailVO> getBookDetailById(Long id, String username) {
+    public Result<BookDetailVO> getBookDetailById(Long id) {
         if (DataUtils.isIllegal(id)) {
             return Result.error(ErrorEnum.PARAM_ERROR);
         }
@@ -73,7 +73,7 @@ public class BookService {
 
         bookDetailVO.setVideos(bookVideoDAO.findAllByBookId(id));
 
-        bookDetailVO.setStar(userService.isStar(id, username));
+        bookDetailVO.setStar(userService.isStar(id));
 
         return Result.success(bookDetailVO);
     }

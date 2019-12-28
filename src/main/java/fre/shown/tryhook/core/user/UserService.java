@@ -4,10 +4,13 @@ import fre.shown.tryhook.common.domain.ErrorEnum;
 import fre.shown.tryhook.common.domain.Result;
 import fre.shown.tryhook.common.util.DataUtils;
 import fre.shown.tryhook.common.util.FileUtils;
+import fre.shown.tryhook.common.util.UserUtils;
 import fre.shown.tryhook.core.book.domain.BookStarVO;
 import fre.shown.tryhook.core.security.RoleEnum;
 import fre.shown.tryhook.module.book.dao.BookDAO;
 import fre.shown.tryhook.module.book.domain.BookDO;
+import fre.shown.tryhook.module.star.StarDAO;
+import fre.shown.tryhook.module.star.StarDO;
 import fre.shown.tryhook.module.user.dao.PrincipalCfgDAO;
 import fre.shown.tryhook.module.user.domain.PrincipalCfgDO;
 import fre.shown.tryhook.module.user.domain.UserDO;
@@ -15,11 +18,11 @@ import fre.shown.tryhook.module.user.enums.PrincipalStatusEnum;
 import fre.shown.tryhook.module.user.manager.PrincipalCfgManager;
 import fre.shown.tryhook.module.user.manager.UserManager;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.LinkedList;
@@ -39,6 +42,8 @@ public class UserService {
     UserManager userManager;
     @Autowired
     BookDAO bookDAO;
+    @Autowired
+    StarDAO starDAO;
     @Autowired
     PrincipalCfgManager principalCfgManager;
     @Autowired
@@ -89,76 +94,57 @@ public class UserService {
         return principalCfgManager.findByUsername(username);
     }
 
-    public Result<Boolean> starByUsernameAndBookId(String username, Long bookId) {
-
-        if (StringUtils.isBlank(username) || DataUtils.isIllegal(bookId)) {
+    @Transactional(rollbackFor = Exception.class)
+    public Result<Boolean> starByBookIdAndUserId(Long bookId, Long userId) {
+        if (DataUtils.isIllegal(bookId) || DataUtils.isIllegal(userId)) {
             return Result.error(ErrorEnum.PARAM_ERROR);
         }
 
-        Result<UserDO> userDOResult = userManager.findByUsername(username);
-        if (!Result.isSuccess(userDOResult)) {
-            return Result.error(userDOResult);
+        try {
+            if (starDAO.existsByBookIdAndUserId(bookId, userId)) {
+                starDAO.deleteByBookIdAndUserId(bookId, userId);
+                return Result.success(false);
+            } else {
+                StarDO starDO = new StarDO();
+                starDO.setBookId(bookId);
+                starDO.setUserId(userId);
+                starDAO.save(starDO);
+                return Result.success(true);
+            }
+        } catch (Exception e) {
+            logger.error(ErrorEnum.RUNTIME_ERROR.getMsg(), e);
+            return Result.error(ErrorEnum.RUNTIME_ERROR);
         }
-        UserDO userDO = userDOResult.getValue();
-
-        String stars = userDO.getStar();
-        boolean result;
-        if (stars == null) {
-            stars = "";
-        }
-        if (stars.contains(bookId.toString())) {
-            //unstar the book
-            stars = stars.replace("," + bookId, "");
-            result = false;
-        } else {
-            //star the book
-            stars += "," + bookId;
-            result = true;
-        }
-
-        userDO.setStar(stars);
-        Result<UserDO> saveResult = userManager.save(userDO);
-        return Result.isSuccess(saveResult) ? Result.success(result) : Result.error(saveResult);
     }
 
-    public Result<List<BookStarVO>> getStarsByUsername(String username) {
-        Result<UserDO> userDOResult = userManager.findByUsername(username);
-        if (!Result.isSuccess(userDOResult)) {
-            return Result.error(userDOResult);
-        }
-        UserDO userDO = userDOResult.getValue();
+    public Result<List<BookStarVO>> getStarsByUserId(Long userId) {
 
-        List<Long> starIds = new LinkedList<>();
+        if (DataUtils.isIllegal(userId)) {
+            return Result.error(ErrorEnum.PARAM_ERROR);
+        }
+
+        List<StarDO> starDOList = starDAO.findAllByUserId(userId);
+
+        List<Long> starBookIds = new LinkedList<>();
         LinkedList<BookStarVO> result = new LinkedList<>();
 
-        if (StringUtils.isEmpty(userDO.getStar())) {
+        if (starDOList == null || starDOList.isEmpty()) {
             return Result.success(result);
         }
-
-        for (String starId : userDO.getStar().split(",")) {
-            if (NumberUtils.isParsable(starId)) {
-                starIds.add(Long.valueOf(starId));
-            }
+        for (StarDO starDO : starDOList) {
+            starBookIds.add(starDO.getBookId());
         }
 
-        for (BookDO bookDO : bookDAO.findAllById(starIds)) {
+        for (BookDO bookDO : bookDAO.findAllById(starBookIds)) {
             result.add(DataUtils.copyFields(bookDO, new BookStarVO()));
         }
 
         return Result.success(result);
     }
 
-    public Boolean isStar(Long bookId, String username) {
-        Result<UserDO> userDOResult = userManager.findByUsername(username);
-        if (!Result.isSuccess(userDOResult)) {
-            return false;
-        }
-        UserDO userDO = userDOResult.getValue();
-        if (userDO == null || userDO.getStar() == null) {
-            return false;
-        }
-
-        return userDO.getStar().contains(bookId.toString());
+    public Boolean isStar(Long bookId) {
+        Long userId = UserUtils.getUserId();
+        return DataUtils.isLegal(userId) && starDAO.existsByBookIdAndUserId(bookId, userId);
     }
 
     public Result<Boolean> registerUser(String username, String password) {
