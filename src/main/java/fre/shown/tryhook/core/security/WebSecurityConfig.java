@@ -28,7 +28,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/admin/**", "/actuator/**").hasAuthority(String.valueOf(RoleEnum.ADMIN.getId()))
-                .antMatchers("/register").permitAll()
+                .antMatchers("/register", "/static").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().successHandler(new NoOpLoginSuccessHandler())
